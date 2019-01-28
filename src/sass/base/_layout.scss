@@ -1,0 +1,17 @@
+/* Background */
+
+body {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.561), rgba(0, 0, 0, 0.568)),
+                      url('https://s3-us-east-2.amazonaws.com/dsdmedia/wp-content/uploads/2017/02/26221913/study-materials.jpg');
+}
+
+
+/* Main Title */
+
+#title {
+    text-align: center;
+    margin-top: 5vh;
+    font-size: 5rem;
+    font-weight: 300;
+    color: #fff;
+}

@@ -14,7 +14,7 @@ module.exports = {
         new htmlWebpackPlugin({
             filename: 'index.html',
             template: './src/index.html'
-        })
+        }),
     ],
     module: {
         rules: [
@@ -23,7 +23,7 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader'
-                }
+                },
             }
         ]
     } 
