@@ -96,11 +96,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: black;
+    background-color: #000;
     color: #fff;
     border: 0.2rem solid #a1a1a1;
     border-radius: .6rem;
-    font-size: 1.8rem; }
+    font-size: 1.8rem;
+    cursor: pointer; }
+    .calc__keyboard .calc__btn:hover {
+      background-image: linear-gradient(45deg, #1a1717, #000); }
     .calc__keyboard .calc__btn--9 {
       grid-column: 3/4;
       grid-row: 3/4; }

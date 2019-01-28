@@ -87,11 +87,18 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: black;
+        //background-image: linear-gradient(45deg, #1a1717, #000);
+        background-color: #000;
         color: #fff;
         border: .2rem solid rgb(161, 161, 161);
         border-radius: .6rem;
         font-size: 1.8rem;
+        cursor: pointer;
+
+    &:hover {
+        background-image: linear-gradient(45deg, #1a1717, #000);
+    }
+
 
         &--9 { 
             grid-column: 3/4;
