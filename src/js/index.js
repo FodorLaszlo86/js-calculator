@@ -35,11 +35,32 @@ const buildFormula = (event) => {
 
    // If buttons 0-9 or . was pressed, character added to newItem
    if(/\.|[0-9]/.test(getValue)) {
+    
         CALCULATOR_STATE.currElement += getValue;
-        console.log(CALCULATOR_STATE.currElement);
-        updateMainDisplay(CALCULATOR_STATE.currElement);
+        if(isValidNumber(CALCULATOR_STATE.currElement)) {
+            updateMainDisplay(CALCULATOR_STATE.currElement);
+        }
+
+        else if(CALCULATOR_STATE.currElement.endsWith('.') && CALCULATOR_STATE.currElement.length > 2) {
+            CALCULATOR_STATE.currElement.slice(0, CALCULATOR_STATE.currElement.length - 1);
+        }
    }
    // If Arithmetic operators are pressed, newItem is pushed to formula in the state, operator as well
+   else if(/[+-/*]/.test(getValue) && isValidNumber(CALCULATOR_STATE.currElement)) {
+       CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement, getValue);
+       CALCULATOR_STATE.currElement = '';
+       updateProcess(CALCULATOR_STATE.formula);
+       updateMainDisplay(CALCULATOR_STATE.currElement);
+   }
+
+   else if(/[=]/.test(getValue)) {
+        CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement);
+        CALCULATOR_STATE.currElement = CALCULATOR_STATE.result();
+        CALCULATOR_STATE.formula = [];
+        updateMainDisplay(CALCULATOR_STATE.currElement);
+        updateProcess(CALCULATOR_STATE.formula);
+        
+   }
 
 
 }
