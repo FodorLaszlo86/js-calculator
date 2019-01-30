@@ -27,9 +27,9 @@ const CALCULATOR_STATE = {
     },
 
     cleanFormula: function() {
-         if(this.formula[this.formula.length - 1] === '') {
-             this.formula = this.formula.slice(0, -2);
-         }
+        if(this.formula[this.formula.length - 1] === '') {
+            this.formula = this.formula.slice(0, -2);
+        }
     }
 }
 
@@ -63,7 +63,6 @@ const mainCalcFn = (event) => {
    else if(/[=]/.test(btnValue)) {
 
     calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
-        
    }
 
 
@@ -72,13 +71,13 @@ const mainCalcFn = (event) => {
 /* After Pressing the EQUAL Button calculates given formula and updates display */
 
 const calcResult = (state, {formula, currElement}) => {
+
     formula.push(currElement);
     state.cleanFormula();
-    console.log(formula);
-    currElement = state.getResult();
-    formula = [];
-    updateMainDisplay(currElement);
-    updateProcess(formula);
+    CALCULATOR_STATE.currElement = '';
+    updateMainDisplay(state.getResult());
+    CALCULATOR_STATE.formula = [];
+    updateProcess(CALCULATOR_STATE.formula);
 }
 
 calcBtn.addEventListener('click', mainCalcFn);
