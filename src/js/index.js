@@ -65,6 +65,11 @@ const mainCalcFn = (event) => {
     calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
    }
 
+   else if(/^ABS$/.test(btnValue)) {
+       CALCULATOR_STATE.currElement = CALCULATOR_STATE.currElement * -1;
+       updateMainDisplay(CALCULATOR_STATE.currElement);
+   }
+
    else if(/^C$/.test(btnValue)) {
        resetCurrElement(CALCULATOR_STATE);
        updateMainDisplay('0');
@@ -99,9 +104,7 @@ calcBtn.addEventListener('click', mainCalcFn);
 
 /* Validate whether input is a Valid number or not */
 const isValidNumber = n => {
-    return (n !== '.' && n !== '') ? 
-            n.split('').filter(char => char === '.').length < 2 && /[0-9]$/.test(n) :
-            false;
+    return /^[+-.]?[0-9]{1,}(?:\.[0-9]{1,})?$/.test(n);
 }
 
 
