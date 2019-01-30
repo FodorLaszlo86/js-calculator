@@ -22,21 +22,27 @@ const CALCULATOR_STATE = {
     prevElement: '',
     memory: '',
 
-    result: function() {
+    getResult: function() {
         return this.formula.length > 0 ? eval(this.formula.join(' ')) : '0';
+    },
+
+    cleanFormula: function() {
+         if(this.formula[this.formula.length - 1] === '') {
+             this.formula = this.formula.slice(0, -2);
+         }
     }
 }
 
 
 /* Build the Expression to evaluate from UI clicks */
-const buildFormula = (event) => {
-   const getValue = event.target.textContent;
-   console.log(getValue);
+const mainCalcFn = (event) => {
+   const btnValue = event.target.textContent;
+   console.log(btnValue);
 
    // If buttons 0-9 or . was pressed, character added to newItem
-   if(/\.|[0-9]/.test(getValue)) {
+   if(/\.|[0-9]/.test(btnValue)) {
     
-        CALCULATOR_STATE.currElement += getValue;
+        CALCULATOR_STATE.currElement += btnValue;
         if(isValidNumber(CALCULATOR_STATE.currElement)) {
             updateMainDisplay(CALCULATOR_STATE.currElement);
         }
@@ -46,26 +52,36 @@ const buildFormula = (event) => {
         }
    }
    // If Arithmetic operators are pressed, newItem is pushed to formula in the state, operator as well
-   else if(/[+-/*]/.test(getValue) && isValidNumber(CALCULATOR_STATE.currElement)) {
-       CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement, getValue);
-       CALCULATOR_STATE.currElement = '';
+   else if(/[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement)) {
+
+       CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement, btnValue);
        updateProcess(CALCULATOR_STATE.formula);
+       CALCULATOR_STATE.currElement = '';
        updateMainDisplay(CALCULATOR_STATE.currElement);
    }
 
-   else if(/[=]/.test(getValue)) {
-        CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement);
-        CALCULATOR_STATE.currElement = CALCULATOR_STATE.result();
-        CALCULATOR_STATE.formula = [];
-        updateMainDisplay(CALCULATOR_STATE.currElement);
-        updateProcess(CALCULATOR_STATE.formula);
+   else if(/[=]/.test(btnValue)) {
+
+    calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
         
    }
 
 
 }
 
-calcBtn.addEventListener('click', buildFormula);
+/* After Pressing the EQUAL Button calculates given formula and updates display */
+
+const calcResult = (state, {formula, currElement}) => {
+    formula.push(currElement);
+    state.cleanFormula();
+    console.log(formula);
+    currElement = state.getResult();
+    formula = [];
+    updateMainDisplay(currElement);
+    updateProcess(formula);
+}
+
+calcBtn.addEventListener('click', mainCalcFn);
 
 
 /* Validate whether input is a Valid number or not */
@@ -88,7 +104,7 @@ updateProcess(CALCULATOR_STATE.formula);
 
 const updateMainDisplay = result => mainDisp.textContent = result;
 
-updateMainDisplay(CALCULATOR_STATE.result());
+updateMainDisplay(CALCULATOR_STATE.getResult());
 
 
 
