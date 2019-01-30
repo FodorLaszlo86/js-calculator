@@ -23,7 +23,7 @@ const CALCULATOR_STATE = {
     memory: '',
 
     getResult: function() {
-        return this.formula.length > 0 ? eval(this.formula.join(' ')) : '0';
+        return this.formula.length > 0 ? eval(this.formula.join(' ')) : 0;
     },
 
     cleanFormula: function() {
@@ -56,13 +56,27 @@ const mainCalcFn = (event) => {
 
        CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement, btnValue);
        updateProcess(CALCULATOR_STATE.formula);
-       CALCULATOR_STATE.currElement = '';
+       resetCurrElement(CALCULATOR_STATE);
        updateMainDisplay(CALCULATOR_STATE.currElement);
    }
 
    else if(/[=]/.test(btnValue)) {
 
     calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
+   }
+
+   else if(/^C$/.test(btnValue)) {
+       resetCurrElement(CALCULATOR_STATE);
+       updateMainDisplay('0');
+   }
+
+   else if(/^CE$/.test(btnValue)) {
+       CALCULATOR_STATE.formula = [];
+       CALCULATOR_STATE.currElement = '';
+       CALCULATOR_STATE.memory = '';
+       updateMainDisplay('0');
+       updateProcess(CALCULATOR_STATE.formula);
+       
    }
 
 
@@ -74,7 +88,7 @@ const calcResult = (state, {formula, currElement}) => {
 
     formula.push(currElement);
     state.cleanFormula();
-    CALCULATOR_STATE.currElement = '';
+    resetCurrElement(state);
     updateMainDisplay(state.getResult());
     CALCULATOR_STATE.formula = [];
     updateProcess(CALCULATOR_STATE.formula);
@@ -91,19 +105,36 @@ const isValidNumber = n => {
 }
 
 
-/* Process Expression */
-/* Display Result on the UI */
+/* Resets Current Element */
+const resetCurrElement = (state) => state.currElement = '';
 
-
-const updateProcess = formula => {
-    secondaryDisp.textContent = formula.join(' ');
+const resetAll = (state) => {
+    state.formula = [];
+    state.currElement = '';
+    state.memory = '';
+    updateProcess(state.formula);
 }
 
-updateProcess(CALCULATOR_STATE.formula);
+
+/* Process Expression */
+
+
+/* Display Result on the UI */
+
+const updateProcess = formula => secondaryDisp.textContent = formula.join(' ');
 
 const updateMainDisplay = result => mainDisp.textContent = result;
 
+const handleUIChange = () => {
+    updateProcess(CALCULATOR_STATE.formula);
+}
+
 updateMainDisplay(CALCULATOR_STATE.getResult());
+
+
+
+
+
 
 
 
