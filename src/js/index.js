@@ -70,6 +70,10 @@ const mainCalcFn = (event) => {
        updateMainDisplay(CALCULATOR_STATE.currElement);
    }
 
+   else if(/√/.test(btnValue)) {
+       console.log('SAY HOOORAY =)')
+   }
+
    else if(/^C$/.test(btnValue)) {
        resetCurrElement(CALCULATOR_STATE);
        updateMainDisplay('0');
