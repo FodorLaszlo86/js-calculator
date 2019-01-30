@@ -30,6 +30,12 @@ const CALCULATOR_STATE = {
         if(this.formula[this.formula.length - 1] === '') {
             this.formula = this.formula.slice(0, -2);
         }
+    },
+
+    trimZeros: function() {
+        if(/^0{1,}/.test(this.currElement)) {
+            this.currElement = this.currElement.replace(/^0+(?=\d)/, '')
+        }
     }
 }
 
@@ -44,6 +50,8 @@ const mainCalcFn = (event) => {
     
         CALCULATOR_STATE.currElement += btnValue;
         if(isValidNumber(CALCULATOR_STATE.currElement)) {
+            console.log(CALCULATOR_STATE.currElement);
+            CALCULATOR_STATE.trimZeros();
             updateMainDisplay(CALCULATOR_STATE.currElement);
         }
 
@@ -53,7 +61,7 @@ const mainCalcFn = (event) => {
    }
    // If Arithmetic operators are pressed, newItem is pushed to formula in the state, operator as well
    else if(/[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement)) {
-
+       CALCULATOR_STATE.trimZeros();
        CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement, btnValue);
        updateProcess(CALCULATOR_STATE.formula);
        resetCurrElement(CALCULATOR_STATE);
