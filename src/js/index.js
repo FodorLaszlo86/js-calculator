@@ -44,45 +44,49 @@ const CALCULATOR_STATE = {
 const mainCalcFn = (event) => {
    const btnValue = event.target.textContent;
 
-   // If buttons 0-9 or . was pressed, character added to state's currentElement
-   if(/\.|[0-9]/.test(btnValue)) {
+    switch(btnValue !== '') {
+        case /\.|[0-9]/.test(btnValue):
+            buildNumber(CALCULATOR_STATE, btnValue);
+            break;
 
-    buildNumber(CALCULATOR_STATE, btnValue);
+        case /[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
+            handleOperators(CALCULATOR_STATE, btnValue);
+            break;
+        
+        case /[=]/.test(btnValue):
+            calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
+            break;
+
+        case /^OPP$/.test(btnValue):
+            handleOpposite(CALCULATOR_STATE);
+            break;
+
+        case /√/.test(btnValue):
+            console.log('SAY HOOORAY =)');
+            break;
+
+        case /^C$/.test(btnValue):
+            resetCurrElement(CALCULATOR_STATE);
+            updateMainDisplay('0');
+            break;
+        
+        case /^CE$/.test(btnValue):
+            resetAll(CALCULATOR_STATE);
+            updateMainDisplay('0');
+            updateProcess(CALCULATOR_STATE.formula);
+            break;
+        
+        default: 
+            showError();
 
    }
-   // If Arithmetic operators are pressed, newItem is pushed to formula in the state, operator as well
-   else if(/[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement)) {
-
-    handleOperators(CALCULATOR_STATE, btnValue);
-       
-   }
-
-   else if(/[=]/.test(btnValue)) {
-    calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
-   }
-
-   else if(/^OPP$/.test(btnValue)) {
-       handleOpposite(CALCULATOR_STATE);
-   }
-
-   else if(/√/.test(btnValue)) {
-       console.log('SAY HOOORAY =)')
-   }
-
-   else if(/^C$/.test(btnValue)) {
-       resetCurrElement(CALCULATOR_STATE);
-       updateMainDisplay('0');
-   }
-
-   else if(/^CE$/.test(btnValue)) {
-       resetAll(CALCULATOR_STATE);
-       updateMainDisplay('0');
-       updateProcess(CALCULATOR_STATE.formula);
-   }
-
 
 }
 
+
+const showError = () => {
+    updateMainDisplay('ERR');
+}
 
 const buildNumber = (state, newChar) => {
     state.currElement += newChar;
