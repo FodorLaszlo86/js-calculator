@@ -46,8 +46,14 @@ const mainCalcFn = (event) => {
 
     switch(btnValue !== '') {
 
-        case /\.|[0-9]/.test(btnValue):
+        case /\.|[0-9]/.test(btnValue) && !CALCULATOR_STATE.equalOpPressed:
             buildNumber(CALCULATOR_STATE, btnValue);
+            break;
+
+        case /\.|[0-9]/.test(btnValue) && CALCULATOR_STATE.equalOpPressed:
+            CALCULATOR_STATE.formula = [];
+            buildNumber(CALCULATOR_STATE,btnValue);
+            CALCULATOR_STATE.equalOpPressed = false;
             break;
 
         case /[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
