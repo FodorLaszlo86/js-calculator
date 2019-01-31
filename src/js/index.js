@@ -11,6 +11,7 @@
 
 const calcBtn = document.querySelector('.calc__keyboard');
 const equalBtn = document.querySelector('.calc__btn--equal');
+const fractionBtn = document.querySelector('#fraction');
 const secondaryDisp = document.querySelector('.calc__display--secondary');
 const mainDisp = document.querySelector('.calc__display--main');
 
@@ -78,6 +79,16 @@ const mainCalcFn = (event) => {
         case /√/.test(btnValue):
             console.log('SAY HOOORAY =)');
             break;
+
+        case /^FR$/.test(btnValue):
+            handleFraction(CALCULATOR_STATE);
+            const newEl = CALCULATOR_STATE.currElement
+            CALCULATOR_STATE.formula.push(newEl.toString());
+            updateMainDisplay(CALCULATOR_STATE.currElement);
+            CALCULATOR_STATE.currElement = '';
+            break;
+        
+        
 
         case /^C$/.test(btnValue):
             resetCurrElement(CALCULATOR_STATE);
@@ -202,6 +213,15 @@ const handleUIChange = () => {
 }
 
 updateMainDisplay(CALCULATOR_STATE.getResult());
+
+
+const handleFraction = state => {
+    if(state.currElement > 0) {
+        state.currElement =  1 / state.currElement;
+    }
+};
+
+//fractionBtn.addEventListener('click', handlefraction);
 
 
 
