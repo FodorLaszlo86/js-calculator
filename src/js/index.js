@@ -82,9 +82,6 @@ const mainCalcFn = (event) => {
 
         case /^FR$/.test(btnValue):
             handleFraction(CALCULATOR_STATE);
-            const newEl = CALCULATOR_STATE.currElement
-            CALCULATOR_STATE.formula.push(newEl.toString());
-            updateMainDisplay(CALCULATOR_STATE.currElement);
             CALCULATOR_STATE.currElement = '';
             break;
         
@@ -218,7 +215,11 @@ updateMainDisplay(CALCULATOR_STATE.getResult());
 const handleFraction = state => {
     if(state.currElement > 0) {
         state.currElement =  1 / state.currElement;
+        const newEl = state.currElement
+        state.formula.push(newEl.toString());
+        updateMainDisplay(state.currElement);
     }
+
 };
 
 //fractionBtn.addEventListener('click', handlefraction);
