@@ -43,39 +43,26 @@ const CALCULATOR_STATE = {
 /* Build the Expression to evaluate from UI clicks */
 const mainCalcFn = (event) => {
    const btnValue = event.target.textContent;
-   console.log(btnValue);
 
-   // If buttons 0-9 or . was pressed, character added to newItem
+   // If buttons 0-9 or . was pressed, character added to state's currentElement
    if(/\.|[0-9]/.test(btnValue)) {
-    
-        CALCULATOR_STATE.currElement += btnValue;
-        if(isValidNumber(CALCULATOR_STATE.currElement)) {
-            console.log(CALCULATOR_STATE.currElement);
-            CALCULATOR_STATE.trimZeros();
-            updateMainDisplay(CALCULATOR_STATE.currElement);
-        }
 
-        else if(CALCULATOR_STATE.currElement.endsWith('.') && CALCULATOR_STATE.currElement.length > 2) {
-            CALCULATOR_STATE.currElement.slice(0, CALCULATOR_STATE.currElement.length - 1);
-        }
+    buildNumber(CALCULATOR_STATE, btnValue);
+
    }
    // If Arithmetic operators are pressed, newItem is pushed to formula in the state, operator as well
    else if(/[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement)) {
-       CALCULATOR_STATE.trimZeros();
-       CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement, btnValue);
-       updateProcess(CALCULATOR_STATE.formula);
-       resetCurrElement(CALCULATOR_STATE);
-       updateMainDisplay(CALCULATOR_STATE.currElement);
+
+    handleOperators(CALCULATOR_STATE, btnValue);
+       
    }
 
    else if(/[=]/.test(btnValue)) {
-
     calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
    }
 
-   else if(/^ABS$/.test(btnValue)) {
-       CALCULATOR_STATE.currElement = CALCULATOR_STATE.currElement * -1;
-       updateMainDisplay(CALCULATOR_STATE.currElement);
+   else if(/^OPP$/.test(btnValue)) {
+       handleOpposite(CALCULATOR_STATE);
    }
 
    else if(/√/.test(btnValue)) {
@@ -88,15 +75,50 @@ const mainCalcFn = (event) => {
    }
 
    else if(/^CE$/.test(btnValue)) {
-       CALCULATOR_STATE.formula = [];
-       CALCULATOR_STATE.currElement = '';
-       CALCULATOR_STATE.memory = '';
+       resetAll(CALCULATOR_STATE);
        updateMainDisplay('0');
        updateProcess(CALCULATOR_STATE.formula);
-       
    }
 
 
+}
+
+
+const buildNumber = (state, newChar) => {
+    state.currElement += newChar;
+
+    if(isValidNumber(state.currElement)) {
+        console.log(state.currElement);
+        state.trimZeros();
+        updateMainDisplay(state.currElement);
+    }
+    else if(state.currElement.endsWith('.') && state.currElement.length > 2) {
+        state.currElement.slice(0, state.currElement.length - 1);
+    }
+}
+
+
+/* Ensures the last typed operator applied, adds operator and number to formula */
+const handleOperators = (state, operator) => {
+    state.trimZeros();
+
+    state.formula.push(state.currElement, operator);
+
+    if(state.formula[state.formula.length - 1] !== operator ) {
+        state.formula = state.formula.slice(0, -1);
+        state.formula.push(operator);
+    }
+
+
+    updateProcess(state.formula);
+    resetCurrElement(state);
+    updateMainDisplay(state.currElement);
+}
+
+
+const handleOpposite = state => {
+    state.currElement = (state.currElement * -1).toString();
+    updateMainDisplay(state.currElement);
 }
 
 /* After Pressing the EQUAL Button calculates given formula and updates display */
@@ -127,7 +149,6 @@ const resetAll = (state) => {
     state.formula = [];
     state.currElement = '';
     state.memory = '';
-    updateProcess(state.formula);
 }
 
 
