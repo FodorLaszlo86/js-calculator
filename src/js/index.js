@@ -40,7 +40,7 @@ const CALCULATOR_STATE = {
 }
 
 
-/* Build the Expression to evaluate from UI clicks */
+/* CALCULATOR CONTROLS */
 const mainCalcFn = (event) => {
    const btnValue = event.target.textContent;
 
