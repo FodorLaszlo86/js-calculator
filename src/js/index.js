@@ -61,7 +61,7 @@ const mainCalcFn = (event) => {
 
         // case where some operator pressed and equal is set to true
         case /[+-/*]/.test(btnValue) && CALCULATOR_STATE.equalOpPressed:
-            buildNumber(CALCULATOR_STATE, btnValue);
+            handleOperators(CALCULATOR_STATE, btnValue);
             CALCULATOR_STATE.equalOpPressed = false;
             break;
 
