@@ -19,7 +19,7 @@ const mainDisp = document.querySelector('.calc__display--main');
 const CALCULATOR_STATE = {
     formula: [],
     currElement: '',
-    prevElement: '',
+    equalOpPressed: false,
     memory: '',
 
     getResult: function() {
@@ -45,6 +45,7 @@ const mainCalcFn = (event) => {
    const btnValue = event.target.textContent;
 
     switch(btnValue !== '') {
+
         case /\.|[0-9]/.test(btnValue):
             buildNumber(CALCULATOR_STATE, btnValue);
             break;
@@ -55,6 +56,13 @@ const mainCalcFn = (event) => {
         
         case /[=]/.test(btnValue):
             calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
+            CALCULATOR_STATE.equalOpPressed = true;
+            break;
+
+        // case where some operator pressed and equal is set to true
+        case /[+-/*]/.test(btnValue) && CALCULATOR_STATE.equalOpPressed:
+            buildNumber(CALCULATOR_STATE, btnValue);
+            CALCULATOR_STATE.equalOpPressed = false;
             break;
 
         case /^OPP$/.test(btnValue):
@@ -77,7 +85,7 @@ const mainCalcFn = (event) => {
             break;
         
         default: 
-            showError();
+            console.log('Default switch statement');
 
    }
 
@@ -144,8 +152,10 @@ const calcResult = (state, {formula, currElement}) => {
     saveToMemory(state);
     console.log('this is memory:', state.memory);
     resetCurrElement(state);
-    CALCULATOR_STATE.formula = [];
-    updateProcess(CALCULATOR_STATE.formula);
+    state.formula = [];
+    updateProcess(state.formula);
+    state.formula.push(state.memory.toString());
+    console.log(state.formula);
 }
 
 calcBtn.addEventListener('click', mainCalcFn);
