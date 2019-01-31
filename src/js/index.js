@@ -89,15 +89,23 @@ const showError = () => {
 }
 
 const buildNumber = (state, newChar) => {
-    state.currElement += newChar;
 
-    if(isValidNumber(state.currElement)) {
-        console.log(state.currElement);
-        state.trimZeros();
-        updateMainDisplay(state.currElement);
-    }
-    else if(state.currElement.endsWith('.') && state.currElement.length > 2) {
+    preventMultiDots(state, newChar);
+    state.trimZeros();
+    updateMainDisplay(state.currElement);
+
+    if(state.currElement.endsWith('.') && state.currElement.length > 2) {
         state.currElement.slice(0, state.currElement.length - 1);
+    }
+}
+
+const preventMultiDots = (state, char) => {
+    if(char === '.' && !state.currElement.includes('.')) {
+        state.currElement += char;
+    }
+
+    else if(char !== '.') {
+        state.currElement += char;
     }
 }
 
