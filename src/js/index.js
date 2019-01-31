@@ -114,6 +114,7 @@ const preventMultiDots = (state, char) => {
 const handleOperators = (state, operator) => {
     state.trimZeros();
 
+
     state.formula.push(state.currElement, operator);
 
     if(state.formula[state.formula.length - 1] !== operator ) {
@@ -139,13 +140,19 @@ const calcResult = (state, {formula, currElement}) => {
 
     formula.push(currElement);
     state.cleanFormula();
-    resetCurrElement(state);
     updateMainDisplay(state.getResult());
+    saveToMemory(state);
+    console.log('this is memory:', state.memory);
+    resetCurrElement(state);
     CALCULATOR_STATE.formula = [];
     updateProcess(CALCULATOR_STATE.formula);
 }
 
 calcBtn.addEventListener('click', mainCalcFn);
+
+const saveToMemory = (state) => {
+    state.memory = state.getResult();
+}
 
 
 /* Validate whether input is a Valid number or not */
@@ -161,6 +168,7 @@ const resetAll = (state) => {
     state.formula = [];
     state.currElement = '';
     state.memory = '';
+    console.log('After resetAll Memory:', state.memory.length)
 }
 
 
