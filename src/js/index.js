@@ -67,6 +67,7 @@ const mainCalcFn = (event) => {
         
         case /[=]/.test(btnValue):
             console.log(CALCULATOR_STATE.formula.join(''));
+
             calcResult(CALCULATOR_STATE);
             CALCULATOR_STATE.equalOpPressed = true;
             break;
@@ -90,8 +91,6 @@ const mainCalcFn = (event) => {
             CALCULATOR_STATE.currElement = '';
             break;
         
-        
-
         case /^C$/.test(btnValue):
             resetCurrElement(CALCULATOR_STATE);
             updateMainDisplay('0');
@@ -101,6 +100,17 @@ const mainCalcFn = (event) => {
             resetAll(CALCULATOR_STATE);
             updateMainDisplay('0');
             updateProcess(CALCULATOR_STATE.formula);
+            break;
+
+        case /^MC$/.test(btnValue):
+            resetAll(CALCULATOR_STATE);
+            console.log('After MC press current memory:', CALCULATOR_STATE.memory);
+            break;
+
+        case /^MR$/.test(btnValue):
+            console.log('Calling Memory');
+            CALCULATOR_STATE.formula.push(callMemory(CALCULATOR_STATE));
+            updateMainDisplay(callMemory(CALCULATOR_STATE));
             break;
         
         default: 
@@ -139,23 +149,12 @@ const preventMultiDots = (state, char) => {
 
 /* Ensures the last typed operator applied, adds operator and number to formula */
 const handleOperators = (state, operator) => {
+
     state.trimZeros();
-
-
-    console.log(operator);
     state.formula.push(state.currElement, operator);
-
-    // if(state.formula[state.formula.length - 1] !== operator ) {
-    //     state.formula[state.formula.length - 1] === operator
-    // }
-
-    console.log(state.formula);
-
-
     updateProcess(state.formula);
     resetCurrElement(state);
     updateMainDisplay(state.currElement);
-    console.log(state.formula);
 }
 
 
@@ -177,6 +176,7 @@ const calcResult = (state) => {
     state.formula = [];
     updateProcess(state.formula);
     state.formula.push(state.memory.toString());
+    console.log(`Memory after equality: ${state.memory}`);
 }
 
 calcBtn.addEventListener('click', mainCalcFn);
@@ -195,12 +195,6 @@ const isValidNumber = n => {
 /* Resets Current Element */
 const resetCurrElement = (state) => state.currElement = '';
 
-const resetAll = (state) => {
-    state.formula = [];
-    state.currElement = '';
-    state.memory = '';
-    console.log('After resetAll Memory:', state.memory.length)
-}
 
 
 /* Process Expression */
@@ -212,12 +206,10 @@ const updateProcess = formula => secondaryDisp.textContent = formula.join(' ');
 
 const updateMainDisplay = result => mainDisp.textContent = result;
 
-const handleUIChange = () => {
-    updateProcess(CALCULATOR_STATE.formula);
-}
+const handleUIChange = state => updateProcess(state.formula);
 
 updateMainDisplay(CALCULATOR_STATE.getResult());
-
+document.addEventListener('load', updateMainDisplay);
 
 const handleFraction = state => {
     if(state.currElement > 0) {
@@ -226,10 +218,27 @@ const handleFraction = state => {
         state.formula.push(newEl.toString());
         updateMainDisplay(state.currElement);
     }
-
 };
 
-//fractionBtn.addEventListener('click', handlefraction);
+
+/* Memory Management Functions */
+
+const resetAll = (state) => {
+    state.formula = [];
+    state.currElement = '';
+    state.memory = '';
+    console.log('After resetAll Memory:', state.memory.length)
+}
+
+const callMemory = state => {
+    if(state.memory.length === 0) {
+        return '0';
+    } else {
+       return state.memory.toString();
+    }
+}
+
+
 
 
 
