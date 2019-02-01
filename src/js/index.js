@@ -21,6 +21,7 @@ const CALCULATOR_STATE = {
     formula: [],
     currElement: '',
     equalOpPressed: false,
+    prevOperator: '',
     memory: '',
 
     getResult: function() {
@@ -45,6 +46,7 @@ const CALCULATOR_STATE = {
 const mainCalcFn = (event) => {
    const btnValue = event.target.textContent;
 
+
     switch(btnValue !== '') {
 
         case /\.|[0-9]/.test(btnValue) && !CALCULATOR_STATE.equalOpPressed:
@@ -57,12 +59,15 @@ const mainCalcFn = (event) => {
             CALCULATOR_STATE.equalOpPressed = false;
             break;
 
+
         case /[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
+            CALCULATOR_STATE.prevOperator = btnValue;
             handleOperators(CALCULATOR_STATE, btnValue);
             break;
         
         case /[=]/.test(btnValue):
-            calcResult(CALCULATOR_STATE, CALCULATOR_STATE);
+            console.log(CALCULATOR_STATE.formula.join(''));
+            calcResult(CALCULATOR_STATE);
             CALCULATOR_STATE.equalOpPressed = true;
             break;
 
@@ -137,17 +142,20 @@ const handleOperators = (state, operator) => {
     state.trimZeros();
 
 
+    console.log(operator);
     state.formula.push(state.currElement, operator);
 
-    if(state.formula[state.formula.length - 1] !== operator ) {
-        state.formula = state.formula.slice(0, -1);
-        state.formula.push(operator);
-    }
+    // if(state.formula[state.formula.length - 1] !== operator ) {
+    //     state.formula[state.formula.length - 1] === operator
+    // }
+
+    console.log(state.formula);
 
 
     updateProcess(state.formula);
     resetCurrElement(state);
     updateMainDisplay(state.currElement);
+    console.log(state.formula);
 }
 
 
@@ -158,18 +166,17 @@ const handleOpposite = state => {
 
 /* After Pressing the EQUAL Button calculates given formula and updates display */
 
-const calcResult = (state, {formula, currElement}) => {
+const calcResult = (state) => {
 
-    formula.push(currElement);
-    state.cleanFormula();
+    state.formula.push(state.currElement);
+    //state.cleanFormula();
     updateMainDisplay(state.getResult());
     saveToMemory(state);
-    console.log('this is memory:', state.memory);
+    console.log('Current Memory:', state.memory);
     resetCurrElement(state);
     state.formula = [];
     updateProcess(state.formula);
     state.formula.push(state.memory.toString());
-    console.log(state.formula);
 }
 
 calcBtn.addEventListener('click', mainCalcFn);
