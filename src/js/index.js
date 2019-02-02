@@ -176,8 +176,11 @@ const preventMultiDots = (state, char) => {
 
 /* Ensures the last typed operator applied, adds operator and number to formula */
 const handleOperators = (state, operator) => {
+
     state.trimZeros();
-    state.formula.push(state.currElement);
+    if(/\.|[0-9]/.test(state.currElement)) {
+        state.formula.push(state.currElement);
+    }
     updateProcess(state.formula);
     resetCurrElement(state);
     state.currElement = operator;
