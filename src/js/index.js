@@ -59,10 +59,31 @@ const mainCalcFn = (event) => {
             CALCULATOR_STATE.equalOpPressed = false;
             break;
 
+        // case /[+-\/\*]/.test(btnValue) && CALCULATOR_STATE.formula.slice(-1)[0] !== btnValue:
+        //     console.log('Hey I got here');
+        //     CALCULATOR_STATE.formula[CALCULATOR_STATE.formula.length - 1] = btnValue;
+        //     updateProcess(CALCULATOR_STATE.formula);
+        //     break;
+
+        case /[+-\/\*]/.test(btnValue) && /[+-\/\*]/.test(CALCULATOR_STATE.currElement):
+            handleOperators(CALCULATOR_STATE, btnValue);
+            if(btnValue !== CALCULATOR_STATE.currElement) {
+                CALCULATOR_STATE.currElement = btnValue;
+                updateMainDisplay(CALCULATOR_STATE.currElement);
+            }
+            break;
+
+        case /\.|[0-9]/.test(btnValue) && /[+-\/\*]/.test(CALCULATOR_STATE.currElement):
+            CALCULATOR_STATE.formula.push(CALCULATOR_STATE.currElement);
+            CALCULATOR_STATE.currElement = '';
+            buildNumber(CALCULATOR_STATE, btnValue);
+            updateMainDisplay(CALCULATOR_STATE.currElement);
+            updateProcess(CALCULATOR_STATE.formula);
+            break;
 
         case /[+-\/\*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
+            console.log('Iam here instead');
             handleOperators(CALCULATOR_STATE, btnValue);
-            changeOperator(CALCULATOR_STATE, btnValue);
             break;
         
         case /[=]/.test(btnValue):
@@ -156,9 +177,10 @@ const preventMultiDots = (state, char) => {
 /* Ensures the last typed operator applied, adds operator and number to formula */
 const handleOperators = (state, operator) => {
     state.trimZeros();
-    state.formula.push(state.currElement, operator);
+    state.formula.push(state.currElement);
     updateProcess(state.formula);
     resetCurrElement(state);
+    state.currElement = operator;
     updateMainDisplay(state.currElement);
     console.log('from handleOperators:', state.formula);
 }
