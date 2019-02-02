@@ -181,6 +181,7 @@ const handleOperators = (state, operator) => {
     updateProcess(state.formula);
     resetCurrElement(state);
     state.currElement = operator;
+    console.log('currentElement from state now:', state.currElement)
     updateMainDisplay(state.currElement);
     console.log('from handleOperators:', state.formula);
 }
