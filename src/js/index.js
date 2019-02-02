@@ -60,7 +60,7 @@ const mainCalcFn = (event) => {
             break;
 
 
-        case /[+-\/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
+        case /[+-\/\*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
             handleOperators(CALCULATOR_STATE, btnValue);
             changeOperator(CALCULATOR_STATE, btnValue);
             break;
@@ -73,7 +73,7 @@ const mainCalcFn = (event) => {
             break;
 
         // case where some operator pressed and equal is set to true
-        case /[+-\/*]/.test(btnValue) && CALCULATOR_STATE.equalOpPressed:
+        case /[+-\/\*]/.test(btnValue) && CALCULATOR_STATE.equalOpPressed:
             handleOperators(CALCULATOR_STATE, btnValue);
             CALCULATOR_STATE.equalOpPressed = false;
             break;
@@ -164,7 +164,7 @@ const handleOperators = (state, operator) => {
 }
 
 const changeOperator = (state, operator) => {
-    if(/[+-\/*]/.test(state.formula[state.formula.length - 1]) && state.formula[state.formula.length - 1] !== operator) {
+    if(/[+-\/\*]/.test(state.formula[state.formula.length - 1]) && state.formula[state.formula.length - 1] !== operator) {
         state.formula[state.formula.length - 1] = operator;
     }
 }
