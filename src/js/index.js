@@ -61,8 +61,8 @@ const mainCalcFn = (event) => {
 
 
         case /[+-/*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
-            CALCULATOR_STATE.prevOperator = btnValue;
             handleOperators(CALCULATOR_STATE, btnValue);
+            changeOperator(CALCULATOR_STATE, btnValue);
             break;
         
         case /[=]/.test(btnValue):
@@ -109,8 +109,14 @@ const mainCalcFn = (event) => {
 
         case /^MR$/.test(btnValue):
             console.log('Calling Memory');
-            CALCULATOR_STATE.formula.push(callMemory(CALCULATOR_STATE));
-            updateMainDisplay(callMemory(CALCULATOR_STATE));
+            console.log(CALCULATOR_STATE.formula);
+            if(!/\.|[0-9]/.test(CALCULATOR_STATE.formula[CALCULATOR_STATE.formula.length - 1])) {
+                console.log('coming from if block formula:', CALCULATOR_STATE.formula);
+                CALCULATOR_STATE.formula.push(callMemory(CALCULATOR_STATE));
+                updateMainDisplay(callMemory(CALCULATOR_STATE));
+                updateProcess(CALCULATOR_STATE.formula);
+            }
+            console.log('final formula:', CALCULATOR_STATE.formula);
             break;
         
         default: 
@@ -131,7 +137,7 @@ const buildNumber = (state, newChar) => {
     state.trimZeros();
     updateMainDisplay(state.currElement);
 
-    if(state.currElement.endsWith('.') && state.currElement.length > 2) {
+    if(state.currElement.endsWith('.') && state.currElement.length > 1) {
         state.currElement.slice(0, state.currElement.length - 1);
     }
 }
@@ -141,7 +147,7 @@ const preventMultiDots = (state, char) => {
         state.currElement += char;
     }
 
-    else if(char !== '.') {
+    else if(/[0-9]/.test(char)) {
         state.currElement += char;
     }
 }
@@ -149,12 +155,18 @@ const preventMultiDots = (state, char) => {
 
 /* Ensures the last typed operator applied, adds operator and number to formula */
 const handleOperators = (state, operator) => {
-
     state.trimZeros();
     state.formula.push(state.currElement, operator);
     updateProcess(state.formula);
     resetCurrElement(state);
     updateMainDisplay(state.currElement);
+    console.log('from handleOperators:', state.formula);
+}
+
+const changeOperator = (state, operator) => {
+    if(/[+-/*]/.test(state.formula[state.formula.length - 1]) && state.formula[state.formula.length - 1] !== operator) {
+        state.formula[state.formula.length - 1] = operator;
+    }
 }
 
 
