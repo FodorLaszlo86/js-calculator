@@ -259,6 +259,14 @@ const handleFraction = state => {
         updateMainDisplay(state.currElement);
         updateProcess(state.formula);
     }
+
+    else if(state.memory !== '') {
+        state.memory = (1 / state.memory).toString();
+        state.formula.pop();
+        state.formula.push(state.memory);
+        updateMainDisplay(state.currElement);
+        updateProcess(state.formula);
+    }
 };
 
 const getPercent = state => {
