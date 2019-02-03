@@ -106,6 +106,11 @@ const mainCalcFn = (event) => {
             handleFraction(CALCULATOR_STATE);
             console.log(CALCULATOR_STATE);
             break;
+
+        case /%/.test(btnValue):
+            console.log(btnValue);
+            getPercent(CALCULATOR_STATE);
+            break;
         
         case /^C$/.test(btnValue):
             resetCurrElement(CALCULATOR_STATE);
@@ -255,6 +260,23 @@ const handleFraction = state => {
         updateProcess(state.formula);
     }
 };
+
+const getPercent = state => {
+    console.log(state.memory);
+    if(state.currElement > 0 && isValidNumber(state.currElement)) {
+        state.currElement = (state.currElement / 100).toString();
+        updateMainDisplay(state.currElement);
+        updateProcess(state.formula);
+    } 
+
+    else if(state.memory !== '') {
+        state.memory = (state.memory / 100).toString();
+        state.formula.pop();
+        state.formula.push(state.memory);
+        updateMainDisplay(state.currElement);
+        updateProcess(state.formula);
+    }
+}
 
 
 /* Memory Management Functions */
