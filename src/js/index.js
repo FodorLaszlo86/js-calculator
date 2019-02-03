@@ -77,13 +77,10 @@ const mainCalcFn = (event) => {
             break;
 
         case /[+-\/\*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
-            console.log('Iam here instead');
             handleOperators(CALCULATOR_STATE, btnValue);
             break;
         
         case /[=]/.test(btnValue):
-            console.log(CALCULATOR_STATE.formula.join(''));
-
             calcResult(CALCULATOR_STATE);
             CALCULATOR_STATE.equalOpPressed = true;
             break;
@@ -99,16 +96,14 @@ const mainCalcFn = (event) => {
             break;
 
         case /√/.test(btnValue):
-            console.log('SAY HOOORAY =)');
+            handleSqrt(CALCULATOR_STATE);
             break;
 
         case /^FR$/.test(btnValue):
             handleFraction(CALCULATOR_STATE);
-            console.log(CALCULATOR_STATE);
             break;
 
         case /%/.test(btnValue):
-            console.log(btnValue);
             getPercent(CALCULATOR_STATE);
             break;
         
@@ -129,8 +124,6 @@ const mainCalcFn = (event) => {
             break;
 
         case /^MR$/.test(btnValue):
-            console.log('Calling Memory');
-            console.log(CALCULATOR_STATE.formula);
             if(!/\.|[0-9]/.test(CALCULATOR_STATE.formula[CALCULATOR_STATE.formula.length - 1])) {
                 console.log('coming from if block formula:', CALCULATOR_STATE.formula);
                 CALCULATOR_STATE.formula.push(callMemory(CALCULATOR_STATE));
@@ -252,10 +245,6 @@ document.addEventListener('load', updateMainDisplay);
 const handleFraction = state => {
     if(state.currElement > 0 && isValidNumber(state.currElement)) {
         state.currElement =  (1 / state.currElement).toString();
-        //const newEl = state.currElement
-        //state.formula.push(state.currElement.toString());
-        //state.currElement = '';
-        console.log('From handleFraction currentelement is:', state.currElement);
         updateMainDisplay(state.currElement);
         updateProcess(state.formula);
     }
@@ -270,7 +259,6 @@ const handleFraction = state => {
 };
 
 const getPercent = state => {
-    console.log(state.memory);
     if(state.currElement > 0 && isValidNumber(state.currElement)) {
         state.currElement = (state.currElement / 100).toString();
         updateMainDisplay(state.currElement);
@@ -279,6 +267,23 @@ const getPercent = state => {
 
     else if(state.memory !== '') {
         state.memory = (state.memory / 100).toString();
+        state.formula.pop();
+        state.formula.push(state.memory);
+        updateMainDisplay(state.currElement);
+        updateProcess(state.formula);
+    }
+}
+
+const handleSqrt = state => {
+    //if its pressed next number comes, calculates square root if another operator pressed
+    if(state.currElement > 0 && isValidNumber(state.currElement)) {
+        state.currElement = (Math.sqrt(state.currElement)).toString();
+        updateMainDisplay(state.currElement);
+        updateProcess(state.formula);
+    } 
+
+    else if(state.memory !== '') {
+        state.memory = (Math.sqrt(state.memory)).toString();
         state.formula.pop();
         state.formula.push(state.memory);
         updateMainDisplay(state.currElement);
