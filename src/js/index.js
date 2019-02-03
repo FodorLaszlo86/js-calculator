@@ -12,8 +12,9 @@
 const calcBtn = document.querySelector('.calc__keyboard');
 const equalBtn = document.querySelector('.calc__btn--equal');
 const fractionBtn = document.querySelector('#fraction');
-const secondaryDisp = document.querySelector('.calc__display--secondary');
+const processDisp = document.querySelector('.calc__display--process');
 const mainDisp = document.querySelector('.calc__display--main');
+const memoryDisp = document.querySelector('.calc__display--memory');
 
 /* Calculator State */
 
@@ -50,6 +51,8 @@ const mainCalcFn = (event) => {
     switch(btnValue !== '') {
 
         case /\.|[0-9]/.test(btnValue) && !CALCULATOR_STATE.equalOpPressed:
+            // btnValue is numeric
+            console.log("heeeeyyyooooooooo!!!!! from case 1")
             buildNumber(CALCULATOR_STATE, btnValue);
             break;
 
@@ -74,6 +77,7 @@ const mainCalcFn = (event) => {
             buildNumber(CALCULATOR_STATE, btnValue);
             updateMainDisplay(CALCULATOR_STATE.currElement);
             updateProcess(CALCULATOR_STATE.formula);
+            console.log("heeeeyyyooooooooo!!!!!")
             break;
 
         case /[+-\/\*]/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
@@ -82,11 +86,13 @@ const mainCalcFn = (event) => {
         
         case /[=]/.test(btnValue):
             calcResult(CALCULATOR_STATE);
+            updateMemoryDisplay(CALCULATOR_STATE);
             CALCULATOR_STATE.equalOpPressed = true;
             break;
 
         // case where some operator pressed and equal is set to true
         case /[+-\/\*]/.test(btnValue) && CALCULATOR_STATE.equalOpPressed:
+            updateMemoryDisplay(CALCULATOR_STATE);
             handleOperators(CALCULATOR_STATE, btnValue);
             CALCULATOR_STATE.equalOpPressed = false;
             break;
@@ -116,21 +122,38 @@ const mainCalcFn = (event) => {
             resetAll(CALCULATOR_STATE);
             updateMainDisplay('0');
             updateProcess(CALCULATOR_STATE.formula);
+            updateMemoryDisplay(CALCULATOR_STATE);
             break;
 
         case /^MC$/.test(btnValue):
             resetAll(CALCULATOR_STATE);
+            updateMemoryDisplay(CALCULATOR_STATE);
+            console.log('After MC press current element:', CALCULATOR_STATE.currElement);
+            updateMainDisplay('0');
             console.log('After MC press current memory:', CALCULATOR_STATE.memory);
             break;
 
         case /^MR$/.test(btnValue):
-            if(!/\.|[0-9]/.test(CALCULATOR_STATE.formula[CALCULATOR_STATE.formula.length - 1])) {
-                console.log('coming from if block formula:', CALCULATOR_STATE.formula);
-                CALCULATOR_STATE.formula.push(callMemory(CALCULATOR_STATE));
-                updateMainDisplay(callMemory(CALCULATOR_STATE));
-                updateProcess(CALCULATOR_STATE.formula);
+            // if(!/\.|[0-9]/.test(CALCULATOR_STATE.formula[CALCULATOR_STATE.formula.length - 1])) {
+            //     console.log('coming from if block formula:', CALCULATOR_STATE.formula);
+            //     CALCULATOR_STATE.formula.push(callMemory(CALCULATOR_STATE));
+            //     updateMainDisplay(callMemory(CALCULATOR_STATE));
+            //     updateProcess(CALCULATOR_STATE.formula);
+            // }
+            // console.log('final formula:', CALCULATOR_STATE.formula);
+            console.log('MEMORY RECALLING')
+            if(!/[+-\/\*]/.test(CALCULATOR_STATE.currElement)) {
+                CALCULATOR_STATE.currElement = CALCULATOR_STATE.memory;
+            } else {
+                CALCULATOR_STATE.currElement += CALCULATOR_STATE.memory;
             }
-            console.log('final formula:', CALCULATOR_STATE.formula);
+        
+            updateMainDisplay(CALCULATOR_STATE.currElement);
+            break;
+
+        case /^MS$/.test(btnValue) && isValidNumber(CALCULATOR_STATE.currElement):
+            CALCULATOR_STATE.memory = CALCULATOR_STATE.currElement;
+            memoryDisp.textContent = `M:${CALCULATOR_STATE.memory}`;
             break;
         
         default: 
@@ -202,6 +225,7 @@ const calcResult = (state) => {
     //state.cleanFormula();
     updateMainDisplay(state.getResult());
     saveToMemory(state);
+    updateMemoryDisplay(state);
     console.log('Current Memory:', state.memory);
     resetCurrElement(state);
     state.formula = [];
@@ -233,7 +257,15 @@ const resetCurrElement = (state) => state.currElement = '';
 
 /* Display Result on the UI */
 
-const updateProcess = formula => secondaryDisp.textContent = formula.join(' ');
+const updateProcess = formula => processDisp.textContent = formula.join(' ');
+
+const updateMemoryDisplay = state => {
+    if(state.memory === '') {
+        memoryDisp.textContent = '';
+    } else {
+        memoryDisp.textContent = `M: ${state.memory}`;
+    }
+}
 
 const updateMainDisplay = result => mainDisp.textContent = result;
 
