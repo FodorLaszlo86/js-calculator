@@ -68,7 +68,8 @@ body {
   height: 15%;
   background-color: #d0f5f3;
   display: flex;
-  flex-direction: column; }
+  flex-direction: column;
+  overflow: hidden; }
   .calc__display--main {
     flex: 1;
     font-size: 2.25rem;
@@ -149,3 +150,6 @@ body {
     .calc__keyboard .calc__btn--perc {
       grid-column: 5/6;
       grid-row: 3/4; }
+    .calc__keyboard .calc__btn--ce {
+      grid-column: 1 / span 2;
+      grid-row: 2/3; }
