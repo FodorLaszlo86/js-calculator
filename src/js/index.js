@@ -59,11 +59,6 @@ const mainCalcFn = (event) => {
             CALCULATOR_STATE.equalOpPressed = false;
             break;
 
-        // case /[+-\/\*]/.test(btnValue) && CALCULATOR_STATE.formula.slice(-1)[0] !== btnValue:
-        //     console.log('Hey I got here');
-        //     CALCULATOR_STATE.formula[CALCULATOR_STATE.formula.length - 1] = btnValue;
-        //     updateProcess(CALCULATOR_STATE.formula);
-        //     break;
 
         case /[+-\/\*]/.test(btnValue) && /[+-\/\*]/.test(CALCULATOR_STATE.currElement):
             handleOperators(CALCULATOR_STATE, btnValue);
@@ -109,7 +104,7 @@ const mainCalcFn = (event) => {
 
         case /^FR$/.test(btnValue):
             handleFraction(CALCULATOR_STATE);
-            CALCULATOR_STATE.currElement = '';
+            console.log(CALCULATOR_STATE);
             break;
         
         case /^C$/.test(btnValue):
@@ -250,11 +245,14 @@ updateMainDisplay(CALCULATOR_STATE.getResult());
 document.addEventListener('load', updateMainDisplay);
 
 const handleFraction = state => {
-    if(state.currElement > 0) {
-        state.currElement =  1 / state.currElement;
-        const newEl = state.currElement
-        state.formula.push(newEl.toString());
+    if(state.currElement > 0 && isValidNumber(state.currElement)) {
+        state.currElement =  (1 / state.currElement).toString();
+        //const newEl = state.currElement
+        //state.formula.push(state.currElement.toString());
+        //state.currElement = '';
+        console.log('From handleFraction currentelement is:', state.currElement);
         updateMainDisplay(state.currElement);
+        updateProcess(state.formula);
     }
 };
 
