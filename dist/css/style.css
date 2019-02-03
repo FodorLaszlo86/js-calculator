@@ -79,13 +79,16 @@ body {
     align-items: center;
     color: #29297c; }
   .calc__display--secondary {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: #311709;
     opacity: .85;
     padding: .3rem 1rem;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center; }
+  .calc__display--memory {
+    font-size: 1.15rem;
+    opacity: .7; }
 
 .calc__keyboard {
   padding: 2rem;
